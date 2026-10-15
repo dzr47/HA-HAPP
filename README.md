@@ -45,7 +45,7 @@ The administrative NDMS connection uses HTTP on the local network. Run Home Assi
 ## Repository layout
 
 - `custom_components/netcraze_vpn/`: Home Assistant integration and panel assets.
-- `brand/`: HACS icon.
+- `custom_components/netcraze_vpn/brand/`: HACS icon.
 - `docs/adapter-plan.md`: capability boundaries and work needed for other routers.
 - `SECURITY.md`: handling of router and subscription secrets.
 
