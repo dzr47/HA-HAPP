@@ -4,11 +4,13 @@ from datetime import timedelta
 import voluptuous as vol
 from homeassistant.components import frontend, panel_custom, websocket_api
 from homeassistant.components.http import StaticPathConfig
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.storage import Store
 from homeassistant.helpers.event import async_track_time_interval
 from .controller import Controller, ControlError
 
 DOMAIN = "netcraze_vpn"
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 PLATFORMS = ["switch", "button", "sensor"]
 ACTIONS = ("status", "source_save", "source_delete", "refresh", "select", "probe", "check", "apply", "mode",
            "device_sync", "device_add", "device_remove", "device_set", "group_mode",

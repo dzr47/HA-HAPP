@@ -22,7 +22,7 @@ jobs:
     name: Home Assistant hassfest
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Validate integration manifest and structure
         uses: home-assistant/actions/hassfest@master
 
@@ -33,7 +33,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Publish release for matching manifest version
         uses: actions/github-script@v9
         with:
