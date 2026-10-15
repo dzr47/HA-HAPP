@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  hacs:
+    name: HACS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate HACS repository
+        uses: hacs/action@main
+        with:
+          category: integration
+
+  hassfest:
+    name: Home Assistant hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate integration manifest and structure
+        uses: home-assistant/actions/hassfest@master
+
+  publish:
+    name: Publish GitHub release
+    needs: [hacs, hassfest]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish release for matching manifest version
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const fs = require('fs');
+            const tag = context.ref.replace('refs/tags/', '');
+            const manifest = JSON.parse(fs.readFileSync('custom_components/netcraze_vpn/manifest.json', 'utf8'));
+            if (tag !== `v${manifest.version}`) {
+              core.setFailed(`Tag ${tag} does not match manifest version ${manifest.version}`);
+              return;
+            }
+            const notesPath = `docs/releases/${tag}.md`;
+            if (!fs.existsSync(notesPath)) {
+              core.setFailed(`Missing release notes: ${notesPath}`);
+              return;
+            }
+            await github.rest.repos.createRelease({
+              ...context.repo,
+              tag_name: tag,
+              name: `HA HAPP ${tag}`,
+              body: fs.readFileSync(notesPath, 'utf8'),
+              draft: false,
+              prerelease: false,
+            });

@@ -2,7 +2,7 @@
 
 Custom integration for Home Assistant to manage an **existing** NetCraze/XKeen/Xray VPN installation. It provides a sidebar panel, registered-device selection, VPN subscription updates, server checks, and site routing lists.
 
-**Status: early source release.** The code is being separated from one home installation. There is no tagged release yet. The current implementation is specific to NetCraze/NDMS and its Xray layout; support for Netgear and other router families requires separate adapters.
+**Status: early public release.** This is an independent Home Assistant integration, with its own config flow, entities and panel. It does not require a separate NDMS integration. The current implementation is specific to NetCraze/NDMS and its Xray layout; support for Netgear and other router families requires separate adapters. Installation on a clean Home Assistant instance is not yet verified.
 
 ## Current compatibility
 
@@ -27,14 +27,14 @@ Installing this integration does **not** install XKeen, Xray, a VPN server, or r
 
 The integration does not automatically choose a server or refresh sources on a schedule. Router configuration changes are explicit panel actions. Other devices keep their existing NDMS policies.
 
-## Setup after a release
+## Install through HACS
 
-1. In HACS, add `https://github.com/dzr47/HA-HAPP` as a custom **Integration** repository and download a release.
+1. In HACS, open the menu and add `https://github.com/dzr47/HA-HAPP` as a custom **Integration** repository. Download the latest release when one is available; until then HACS can use the default branch.
 2. Restart Home Assistant. In **Settings → Devices & services → Add integration**, choose **HA HAPP (NetCraze/XKeen)**.
 3. Enter the router IPv4 address, local administrator credentials, a registered main device MAC and the ID of the already configured VPN access policy. The main device is used by the single-device switch; the panel can manage additional registered devices.
 4. Open **HA HAPP** in the sidebar. Add a subscription and, if needed, an HTTPS source for the VPN site list under **Маршрутизация сайтов**.
 
-The integration domain remains `netcraze_vpn`. It cannot be installed alongside a manually copied custom integration with the same domain. This draft branch should not be treated as an update to an existing home installation.
+The integration domain remains `netcraze_vpn`. It cannot be installed alongside a manually copied custom integration with the same domain. Back up Home Assistant and the router before replacing an existing installation.
 
 ## Privacy and operational limits
 
@@ -49,4 +49,4 @@ The administrative NDMS connection uses HTTP on the local network. Run Home Assi
 - `docs/adapter-plan.md`: capability boundaries and work needed for other routers.
 - `SECURITY.md`: handling of router and subscription secrets.
 
-The project uses the MIT license. This branch is a starting point for an independent HACS project. Release gating includes compatibility review on a clean Home Assistant instance, automated HACS/hassfest validation, and a tagged GitHub release.
+The project uses the MIT license. HACS and hassfest checks run on changes to `main`; release tags are published as full GitHub releases only after both checks pass. A clean Home Assistant installation and a controlled router trial are still needed before broad compatibility claims. See the [publishing process](docs/hacs-publishing.md), [release notes](docs/releases/v0.1.0.md) and [adapter plan](docs/adapter-plan.md).
