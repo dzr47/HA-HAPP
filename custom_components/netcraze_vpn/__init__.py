@@ -22,7 +22,8 @@ async def async_setup(hass, config):
     await hass.http.async_register_static_paths([StaticPathConfig(
         "/netcraze_vpn/panel.js", str(Path(__file__).parent / "panel.js"), False), StaticPathConfig(
         "/netcraze_vpn/devices-panel.js", str(Path(__file__).parent / "devices-panel.js"), False), StaticPathConfig(
-        "/netcraze_vpn/routes-panel.js", str(Path(__file__).parent / "routes-panel.js"), False)])
+        "/netcraze_vpn/routes-panel.js", str(Path(__file__).parent / "routes-panel.js"), False), StaticPathConfig(
+        "/netcraze_vpn/localization.js", str(Path(__file__).parent / "localization.js"), False)])
     websocket_api.async_register_command(hass, ws_state)
     websocket_api.async_register_command(hass, ws_action)
     return True

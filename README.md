@@ -14,7 +14,7 @@ Custom integration for Home Assistant to manage an **existing** NetCraze/XKeen/X
 | Xray route tags | Existing `vpn-1` VLESS outbound and the expected transparent routing structure |
 | Router access | Local administrator account; HTTP management reachable only from the trusted LAN |
 | Subscription format | VLESS TCP/raw REALITY URI list, plain text or Base64; other formats are skipped |
-| Home Assistant UI | Config flow has English and Russian labels; the sidebar panel is currently in Russian |
+| Home Assistant UI | Config flow and sidebar panel support English and Russian |
 
 Installing this integration does **not** install XKeen, Xray, a VPN server, or router firmware. The setup flow reads the existing Xray configuration and rejects a different layout. Router models and firmware not listed above are unverified. See [adapter plan](docs/adapter-plan.md).
 
@@ -32,7 +32,9 @@ The integration does not automatically choose a server or refresh sources on a s
 1. In HACS, open the menu and add `https://github.com/dzr47/HA-HAPP` as a custom **Integration** repository. Download the latest release when one is available; until then HACS can use the default branch.
 2. Restart Home Assistant. In **Settings → Devices & services → Add integration**, choose **HA HAPP (NetCraze/XKeen)**.
 3. Enter the router IPv4 address, local administrator credentials, a registered main device MAC and the ID of the already configured VPN access policy. The main device is used by the single-device switch; the panel can manage additional registered devices.
-4. Open **HA HAPP** in the sidebar. Add a subscription and, if needed, an HTTPS source for the VPN site list under **Маршрутизация сайтов**.
+4. Open **HA HAPP** in the sidebar. Add a subscription and, if needed, an HTTPS source for the VPN site list under **Site routing**.
+
+The panel has a **Language** selector in its header with English and Russian options. It initially follows the Home Assistant interface language and remembers an explicit choice per Home Assistant user in that browser. Only the language preference is stored in browser storage. Router credentials and saved subscription URLs remain in Home Assistant private storage; registered device data is read through authenticated Home Assistant and is not stored in the browser.
 
 The integration domain remains `netcraze_vpn`. It cannot be installed alongside a manually copied custom integration with the same domain. Back up Home Assistant and the router before replacing an existing installation.
 
