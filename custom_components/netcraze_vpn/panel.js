@@ -4,16 +4,16 @@ import './routes-panel.js?v=0.1.0';
 import {localize, locale} from './localization.js?v=0.1.0';
 const escape = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 class NetcrazeVPNPanel extends HTMLElement {
-  constructor() { super(); this.attachShadow({mode:"open"}); this.s = null; this.edit = ""; this.polling = false; this.generation=0; this.lang=null;
+  constructor() { super(); this.attachShadow({mode:"open"}); this.s = null; this.edit = ""; this.polling = false; this.generation=0; this.panelLanguage=null;
     this.devicePanel=document.createElement("netcraze-vpn-devices");
     this.devicePanel.addEventListener("vpn-action",event=>this.action(event.detail.action,event.detail.payload));
     this.routesPanel=document.createElement("netcraze-vpn-routes");
     this.routesPanel.addEventListener("vpn-action",event=>this.action(event.detail.action,event.detail.payload)); }
   set hass(value) { this._hass = value;
-    if (!this.lang) {
+    if (!this.panelLanguage) {
       let saved;
       try { saved=localStorage.getItem(`netcraze_vpn.language.${value.user?.id || "default"}`); } catch (_) { /* Private browsing can disable storage. */ }
-      this.lang=["ru","en"].includes(saved) ? saved : String(value.language || value.locale?.language || "en").toLowerCase().startsWith("ru") ? "ru" : "en";
+      this.panelLanguage=["ru","en"].includes(saved) ? saved : String(value.language || value.locale?.language || "en").toLowerCase().startsWith("ru") ? "ru" : "en";
     }
     if (!this.polling && this.isConnected) this.start(); }
   connectedCallback() { if (this._hass) this.start(); }
@@ -26,17 +26,17 @@ class NetcrazeVPNPanel extends HTMLElement {
       if(generation!==this.generation || !this.polling)return;
       // Preserve partially typed URLs and names across status polling.
       if (!this.s || JSON.stringify(state) !== JSON.stringify(this.s)) { this.s = state; this.render(); }
-    } catch(e) { if(!this.s) this.shadowRoot.textContent = this.lang === "en" ? "VPN panel unavailable. Check the integration and administrator access." : "Панель VPN недоступна. Проверьте интеграцию и права администратора."; }
+    } catch(e) { if(!this.s) this.shadowRoot.textContent = this.panelLanguage === "en" ? "VPN panel unavailable. Check the integration and administrator access." : "Панель VPN недоступна. Проверьте интеграцию и права администратора."; }
     if(this.polling && generation===this.generation) this.timer = setTimeout(() => this.poll(generation), this.s?.busy ? 500 : 5000);
   }
   async action(action, payload={}) {
     try { await this._hass.callWS({type:"netcraze_vpn/action", action, payload}); this.s.busy = true; this.s.message="Выполняется…"; this.render();
       clearTimeout(this.timer); const generation=++this.generation; this.timer=setTimeout(()=>this.poll(generation),100); }
-    catch(e) { const error=this.shadowRoot.querySelector("#error"); error.textContent = e.message || "Команда не принята"; localize(error,this.lang); }
+    catch(e) { const error=this.shadowRoot.querySelector("#error"); error.textContent = e.message || "Команда не принята"; localize(error,this.panelLanguage); }
   }
   render() {
     const root = this.shadowRoot, s = this.s;
-    const date=value=>value ? new Date(value * 1000).toLocaleString(locale(this.lang)) : "Ещё не проверяли";
+    const date=value=>value ? new Date(value * 1000).toLocaleString(locale(this.panelLanguage)) : "Ещё не проверяли";
     const draftName = root.querySelector("#source-name")?.value || "";
     const draftUrl = root.querySelector("#source-url")?.value || "";
     const disabled = s.busy ? "disabled" : "";
@@ -56,7 +56,7 @@ class NetcrazeVPNPanel extends HTMLElement {
       .vpn-list-sync{background:#2e7d32;border-color:#2e7d32;color:#fff}.vpn-list-sync:hover{background:#256728}.sync-meta{font-size:13px;color:var(--secondary-text-color);margin:7px 2px 14px}
       .group-control{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px;border:1px solid var(--divider-color);border-radius:12px;background:var(--secondary-background-color)}.group-copy{min-width:0}.group-copy h3{margin:0 0 6px;font-size:18px}.group-copy p{margin:4px 0}.group-copy small{display:block}.group-toggle{flex:0 0 auto;display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:4px 0;color:inherit}.group-toggle:focus-visible{outline:2px solid var(--primary-color);outline-offset:4px}.toggle-track{display:inline-flex;align-items:center;width:56px;height:32px;padding:4px;border-radius:20px;background:#777;transition:background .18s}.toggle-knob{width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:transform .18s}.group-toggle.vpn .toggle-track{background:#2e7d32}.group-toggle.partial .toggle-track{background:#b7791f}.group-toggle.vpn .toggle-knob{transform:translateX(24px)}.group-toggle.partial .toggle-knob{transform:translateX(12px)}.toggle-label{min-width:82px;text-align:left;font-weight:600}.check-result{padding:12px 14px;margin-top:12px;border-left:4px solid var(--primary-color);background:var(--secondary-background-color);border-radius:0 8px 8px 0}.check-result strong{display:block;margin-bottom:3px}
       @media(max-width:600px){main{padding:14px 10px 50px}section{padding:16px} .row button{flex:1}h1{font-size:24px}}
-      </style><main lang="${this.lang}"><header><button class="menu" id="menu" aria-label="Открыть меню">☰</button><h1>VPN дома</h1><span class="badge">NetCraze</span><label class="language" data-no-translate>Language / Язык <select id="panel-language" aria-label="Panel language / Язык панели"><option value="ru" ${this.lang==="ru"?"selected":""}>Русский</option><option value="en" ${this.lang==="en"?"selected":""}>English</option></select></label></header>
+      </style><main lang="${this.panelLanguage}"><header><button class="menu" id="menu" aria-label="Открыть меню">☰</button><h1>VPN дома</h1><span class="badge">NetCraze</span><label class="language" data-no-translate>Language / Язык <select id="panel-language" aria-label="Panel language / Язык панели"><option value="ru" ${this.panelLanguage==="ru"?"selected":""}>Русский</option><option value="en" ${this.panelLanguage==="en"?"selected":""}>English</option></select></label></header>
       <p class="lead">Управление VPN на роутере для выбранных устройств дома.</p>
       <section><div class="row"><button id="vpn-list-sync" class="vpn-list-sync" ${disabled}>Обновить список сервисов</button></div><p class="sync-meta">Последнее обновление: ${escape(date(s.site_routes?.lists?.vpn?.updated))}${s.site_routes?.lists?.vpn?.count?` · ${s.site_routes.lists.vpn.count} адресов и доменов` : ""}</p><small>Загрузит свежий список, проверит конфигурацию Xray и применит маршрутизацию: совпадения из списка — через VPN, остальное — напрямую.</small></section>
       <div class="status" role="status" aria-live="polite">${s.busy ? "⏳ " : ""}${escape(s.message)}${s.duration !== null ? ` · ${s.duration} с` : ""}</div><p id="error"></p>
@@ -65,9 +65,9 @@ class NetcrazeVPNPanel extends HTMLElement {
       <p><small>VPN-сервер сохраняется при выключении. Проверка состояния не меняет настройки роутера.</small></p></section><div id="device-slot"></div>
       <section><h2>Серверы</h2><div class="row"><button id="refresh" ${disabled}>Обновить все подписки</button><button id="check" ${disabled||(!s.selected?"disabled":"")}>Проверить VPN</button></div>
       <p><small>«Проверить VPN» обновляет TCP-задержку всех серверов и проверяет один общий список из шести сервисов через каждый сервер. TCP измеряется с HA (не ICMP ping), HTTPS — с роутера. Выбор строки не переключает роутер.</small></p>
-      <div class="scroll"><table><thead><tr><th>Выбор</th><th>Сервер</th><th>TCP</th><th>Проверка VPN</th></tr></thead><tbody>${s.nodes.map(n=>`<tr class="${n.id===s.active?"active":""}"><td><input type="radio" name="server" data-node="${escape(n.id)}" ${n.id===s.selected?"checked":""} ${disabled} data-no-translate aria-label="${this.lang==="en"?"Select":"Выбрать"} ${escape(n.name)}"></td><td><span data-no-translate>${escape(n.name)}</span> ${n.id===s.active?'<span class="badge">На роутере</span>':""}<br><small data-no-translate>${escape(s.sources.find(x=>x.id===n.source)?.name||(this.lang==="en"?"Subscription":"Подписка"))}</small></td><td>${n.checked?(n.latency===null?"Нет ответа":`${n.latency} мс`):"—"}<br><small>${n.checked?escape(date(n.checked)):""}</small></td><td>${escape(summary(n))}<br><small>${escape(date(n.vpn_services?.checked || n.vpn_checked))}</small></td></tr>`).join("")||'<tr><td colspan="4">Добавьте подписку ниже.</td></tr>'}</tbody></table></div>
+      <div class="scroll"><table><thead><tr><th>Выбор</th><th>Сервер</th><th>TCP</th><th>Проверка VPN</th></tr></thead><tbody>${s.nodes.map(n=>`<tr class="${n.id===s.active?"active":""}"><td><input type="radio" name="server" data-node="${escape(n.id)}" ${n.id===s.selected?"checked":""} ${disabled} data-no-translate aria-label="${this.panelLanguage==="en"?"Select":"Выбрать"} ${escape(n.name)}"></td><td><span data-no-translate>${escape(n.name)}</span> ${n.id===s.active?'<span class="badge">На роутере</span>':""}<br><small data-no-translate>${escape(s.sources.find(x=>x.id===n.source)?.name||(this.panelLanguage==="en"?"Subscription":"Подписка"))}</small></td><td>${n.checked?(n.latency===null?"Нет ответа":`${n.latency} мс`):"—"}<br><small>${n.checked?escape(date(n.checked)):""}</small></td><td>${escape(summary(n))}<br><small>${escape(date(n.vpn_services?.checked || n.vpn_checked))}</small></td></tr>`).join("")||'<tr><td colspan="4">Добавьте подписку ниже.</td></tr>'}</tbody></table></div>
       <p class="row"><button id="apply" class="primary" ${disabled||(!s.selected?"disabled":"")}>Применить выбранный сервер</button></p>
-      <div class="service-report" aria-live="polite"><h3>Сервисы через выбранный VPN</h3><p class="muted"><span data-no-translate>${escape(selected?.name || (this.lang==="en"?"Select a server":"Выберите сервер"))}</span> · ${escape(date(report?.checked))}</p>
+      <div class="service-report" aria-live="polite"><h3>Сервисы через выбранный VPN</h3><p class="muted"><span data-no-translate>${escape(selected?.name || (this.panelLanguage==="en"?"Select a server":"Выберите сервер"))}</span> · ${escape(date(report?.checked))}</p>
       ${report?`<div class="services">${report.results.map(r=>`<article class="service ${escape(r.status)}"><strong>${escape(r.name)}</strong><p class="service-state">${r.status==="ok"?"●":r.status==="restricted"?"◐":"○"} ${escape(r.message)}</p><small>${r.http?`HTTP ${r.http} · `:""}Всего: ${r.total_ms} мс${r.first_byte_ms?`<br>Первый ответ: ${r.first_byte_ms} мс`:""}${r.tls_ms?` · TLS: ${r.tls_ms} мс`:""}<br><span data-no-translate>${escape(r.url)}</span></small></article>`).join("")}</div>`:'<p class="muted">Нажмите «Проверить VPN» — измерим TCP-задержку и проверим один общий список из шести сервисов через каждый сервер. Запросы идут парами, до 20 секунд на сервис.</p>'}
       <p><small>Запросы идут с роутера через выбранный сервер, даже если он ещё не применён. Доступность страницы не гарантирует вход в аккаунт, звонки MAX, работу Telegram-приложения или видео YouTube. 403/429 может означать защиту сайта или ограничения IP. Время включает VPN и HTTPS; это не ping и не тест скорости.</small></p></div>
       <small>Перед применением: проверка Xray и HTTPS, резервная копия. После переключения: повторная проверка; при ошибке — возврат предыдущей конфигурации. Текущие соединения телефона могут переподключиться.</small></section>
@@ -77,14 +77,14 @@ class NetcrazeVPNPanel extends HTMLElement {
       <p><small>Можно добавить несколько источников. Ссылки и ключи не показываются в состояниях HA и истории. Обновление списка не меняет активный сервер. Поддерживаются VLESS TCP REALITY.</small></p></section>
       <p class="muted"><small>Если Home Assistant выключен, VPN продолжает работать на роутере. Панель доступна администраторам HA. Изменения начинают действовать для новых соединений; приложения могут удерживать старые соединения.</small></p></main>`;
     root.querySelector("#source-name").value=draftName; root.querySelector("#source-url").value=draftUrl;
-    localize(root,this.lang);
-    root.querySelector("#device-slot").append(this.devicePanel); this.devicePanel.language=this.lang; this.devicePanel.state=s;
-    root.querySelector("#routes-slot").append(this.routesPanel); this.routesPanel.language=this.lang; this.routesPanel.state=s;
+    localize(root,this.panelLanguage);
+    root.querySelector("#device-slot").append(this.devicePanel); this.devicePanel.language=this.panelLanguage; this.devicePanel.state=s;
+    root.querySelector("#routes-slot").append(this.routesPanel); this.routesPanel.language=this.panelLanguage; this.routesPanel.state=s;
     const on=(id,fn)=>root.querySelector("#"+id)?.addEventListener("click",fn);
     on("menu",()=>this.dispatchEvent(new CustomEvent("hass-toggle-menu",{bubbles:true,composed:true})));
     root.querySelector("#panel-language").onchange=event=>{
-      this.lang=event.target.value;
-      try { localStorage.setItem(`netcraze_vpn.language.${this._hass?.user?.id || "default"}`,this.lang); } catch (_) { /* Language still works this session. */ }
+      this.panelLanguage=event.target.value;
+      try { localStorage.setItem(`netcraze_vpn.language.${this._hass?.user?.id || "default"}`,this.panelLanguage); } catch (_) { /* Language still works this session. */ }
       this.render();
       this.shadowRoot.querySelector("#panel-language")?.focus({preventScroll:true});
     };

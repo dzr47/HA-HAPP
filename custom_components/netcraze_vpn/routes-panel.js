@@ -4,7 +4,7 @@ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 class VPNRoutes extends HTMLElement {
   constructor(){super();this.attachShadow({mode:"open"});this.drafts={};this.loaded={};this.pending={};this.error="";this.key="";}
   set state(s){this.s=s;const key=JSON.stringify([s.busy,s.site_routes]);if(key!==this.key){this.key=key;this.render();}else this.restoreFocus();}
-  set language(value){if(this.lang!==value){this.lang=value;if(this.s)this.render();}}
+  set language(value){if(this.panelLanguage!==value){this.panelLanguage=value;if(this.s)this.render();}}
   act(action,payload={}){this.dispatchEvent(new CustomEvent("vpn-action",{detail:{action,payload},bubbles:true,composed:true}));}
   capture(){
     for(const k of ["direct","vpn"]){
@@ -19,11 +19,11 @@ class VPNRoutes extends HTMLElement {
     const unsaved=["direct","vpn"].some(k=>this.shadowRoot.getElementById(`text-${k}`).value!==r.lists[k].text||this.shadowRoot.getElementById(`url-${k}`).value.trim());
     this.shadowRoot.getElementById('routes-validate').disabled=this.s.busy||unsaved;
     this.shadowRoot.getElementById('routes-apply').disabled=this.s.busy||unsaved||!r.can_apply;
-    const draft=this.shadowRoot.getElementById('route-draft');draft.textContent=unsaved?'Сначала сохраните изменения в полях списков.':"";localize(draft,this.lang);
+    const draft=this.shadowRoot.getElementById('route-draft');draft.textContent=unsaved?'Сначала сохраните изменения в полях списков.':"";localize(draft,this.panelLanguage);
   }
   render(){
     const r=this.s.site_routes;if(!r)return;this.capture();
-    const when=v=>v?new Date(v*1000).toLocaleString(locale(this.lang)):"ещё нет";
+    const when=v=>v?new Date(v*1000).toLocaleString(locale(this.panelLanguage)):"ещё нет";
     const opened=[...this.shadowRoot.querySelectorAll('details[open]')].map(el=>el.id);
     for(const k of ["direct","vpn"]){
       const text=r.lists[k].text;
@@ -44,7 +44,7 @@ class VPNRoutes extends HTMLElement {
       <p id="route-draft" class="warning"></p><div class="row"><button id="routes-refresh" ${disabled}>Обновить все источники</button><button id="routes-validate" ${disabled}>Проверить правила</button><button id="routes-apply" class="primary" ${this.s.busy||!r.can_apply?"disabled":""}>Применить правила</button></div>
       <p class="muted">Проверка: ${esc(when(r.validated_at))}. Перед применением требуется проверка актуальных списков и конфигурации роутера. Для отмены выберите «Без правил сайтов», проверьте и примените.</p>
       <details id="route-help"><summary>Формат списков и ограничения</summary><p class="muted">Одна запись на строку; # — комментарий. Поддерживаются домены и URL, full: для точного совпадения, IP-адреса и CIDR (IPv4/IPv6). Префикс ip: можно использовать для явного IP. example.com включает поддомены. Кириллица поддерживается. До 5000 записей в каждом списке. Регулярные выражения и HTML не принимаются. Закрытый Google Документ без доступа серверу не загрузится; можно использовать файл.</p><p class="muted">Xray проверяет сначала домены, затем IP/CIDR согласно правилам. ECH может скрыть имя домена, но IP-правило по-прежнему может совпасть. DNS остаётся по текущей схеме роутера: исключение для сайта само по себе не переводит его DNS напрямую. Проверка VPN выше проверяет выбранный сервер независимо от этих списков. Применение может переподключить текущие соединения.</p></details><p id="route-error" class="error" role="alert">${esc(this.error)}</p></section>`;
-    localize(this.shadowRoot,this.lang);
+    localize(this.shadowRoot,this.panelLanguage);
     for(const k of ["direct","vpn"]){
       const draft=this.drafts[k]||{text:r.lists[k].text,url:""};
       this.shadowRoot.getElementById(`text-${k}`).value=draft.text;
@@ -52,7 +52,7 @@ class VPNRoutes extends HTMLElement {
       this.shadowRoot.getElementById(`file-${k}`).onchange=async e=>{
         const f=e.target.files?.[0];if(!f)return;
         try{if(f.size>262144)throw Error("Максимальный размер — 256 КБ");const bytes=await f.arrayBuffer();const text=new TextDecoder("utf-8",{fatal:true}).decode(bytes);this.drafts[k]={text,url:""};this.shadowRoot.getElementById(`text-${k}`).value=text;this.shadowRoot.getElementById(`url-${k}`).value="";this.error="";}catch(err){this.error=err.message||"Файл должен быть UTF-8";}
-        const error=this.shadowRoot.getElementById('route-error');error.textContent=this.error;localize(error,this.lang);
+        const error=this.shadowRoot.getElementById('route-error');error.textContent=this.error;localize(error,this.panelLanguage);
         this.updateDraftState();
       };
       this.shadowRoot.getElementById(`text-${k}`).oninput=()=>this.updateDraftState();
