@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Existing NetCraze/XKeen VPN",
+        "description": "Requires an existing Xray/XKeen setup and local NDW2 administrator access. The main device must already be registered on the router.",
+        "data": {
+          "host": "Router IPv4 address",
+          "username": "Router administrator",
+          "password": "Router password",
+          "client_mac": "Main device MAC address",
+          "policy": "VPN access policy ID"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not read the expected Xray configuration. Check the router, credentials and VPN setup."
+    },
+    "abort": {
+      "already_configured": "This router is already configured."
+    }
+  }
+}
