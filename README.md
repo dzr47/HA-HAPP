@@ -14,14 +14,14 @@ Custom integration for Home Assistant to manage an **existing** NetCraze/XKeen/X
 | Xray route tags | Existing `vpn-1` VLESS outbound and the expected transparent routing structure |
 | Router access | Local administrator account; HTTP management reachable only from the trusted LAN |
 | Subscription format | VLESS TCP/raw REALITY URI list, plain text or Base64; other formats are skipped |
-| Home Assistant UI | Config flow and sidebar panel support English and Russian |
+| Home Assistant UI | Config flow and sidebar panel support English, Russian, German, Spanish and Simplified Chinese |
 
 Installing this integration does **not** install XKeen, Xray, a VPN server, or router firmware. The setup flow reads the existing Xray configuration and rejects a different layout. Router models and firmware not listed above are unverified. See [adapter plan](docs/adapter-plan.md).
 
 ## What it does
 
 - Manage up to ten HTTPS subscription sources, select a VLESS REALITY node, and apply it with Xray validation, router backup and rollback on a failed check.
-- Show registered NDMS clients, including offline devices; select which clients use the existing VPN policy and restore their previous policy when disabled.
+- Show registered NDMS clients, including offline devices; select which clients use the existing VPN policy and restore their previous policy when disabled. Device categories are search hints inferred from NDMS names and model numbers. Search accepts common Cyrillic to Latin transliteration; it does not rename devices on the router.
 - Check TCP connection time from Home Assistant and HTTPS responses through each VPN node on the router. The current fixed probes are MAX Web, Gosuslugi, ChatGPT, Instagram, Telegram Web and YouTube. A page response does not prove an app login, call or video stream works.
 - Import site routing lists from text or an HTTPS URL. Without a configured source, the “update VPN list” button reports that a source is needed. The site-routing mode starts **off**; a successful VPN-list sync selects “VPN only for listed sites” and applies the checked Xray config.
 
@@ -34,7 +34,7 @@ The integration does not automatically choose a server or refresh sources on a s
 3. Enter the router IPv4 address, local administrator credentials, a registered main device MAC and the ID of the already configured VPN access policy. The main device is used by the single-device switch; the panel can manage additional registered devices.
 4. Open **HA HAPP** in the sidebar. Add a subscription and, if needed, an HTTPS source for the VPN site list under **Site routing**.
 
-The panel has a **Language** selector in its header with English and Russian options. It initially follows the Home Assistant interface language and remembers an explicit choice per Home Assistant user in that browser. Only the language preference is stored in browser storage. Router credentials and saved subscription URLs remain in Home Assistant private storage; registered device data is read through authenticated Home Assistant and is not stored in the browser.
+The panel has a **Panel language** selector in its header with English, Russian, German, Spanish and Simplified Chinese options. It initially follows the Home Assistant interface language and remembers an explicit choice per Home Assistant user in that browser. The panel language changes built-in labels and messages; router-provided device names, custom subscription names and notifications from other integrations retain their original text. The legacy default source name is displayed in the selected language without changing its saved value. Home Assistant entity names use the backend language when an entity is created and may retain existing names. Only the language preference is stored in browser storage. Router credentials and saved subscription URLs remain in Home Assistant private storage; registered device data is read through authenticated Home Assistant and is not stored in the browser.
 
 The integration domain remains `netcraze_vpn`. It cannot be installed alongside a manually copied custom integration with the same domain. Back up Home Assistant and the router before replacing an existing installation.
 
@@ -51,4 +51,4 @@ The administrative NDMS connection uses HTTP on the local network. Run Home Assi
 - `docs/adapter-plan.md`: capability boundaries and work needed for other routers.
 - `SECURITY.md`: handling of router and subscription secrets.
 
-The project uses the MIT license. HACS and hassfest checks run on changes to `main`; release tags are published as full GitHub releases only after both checks pass. A clean Home Assistant installation and a controlled router trial are still needed before broad compatibility claims. See the [publishing process](docs/hacs-publishing.md), [release notes](docs/releases/v0.1.0.md) and [adapter plan](docs/adapter-plan.md).
+The project uses the MIT license. HACS and hassfest checks run on changes to `main`; release tags are published as full GitHub releases only after both checks pass. A clean Home Assistant installation and a controlled router trial are still needed before broad compatibility claims. See the [publishing process](docs/hacs-publishing.md), [release notes](docs/releases/v0.1.1.md) and [adapter plan](docs/adapter-plan.md).

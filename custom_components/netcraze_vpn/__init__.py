@@ -23,7 +23,10 @@ async def async_setup(hass, config):
         "/netcraze_vpn/panel.js", str(Path(__file__).parent / "panel.js"), False), StaticPathConfig(
         "/netcraze_vpn/devices-panel.js", str(Path(__file__).parent / "devices-panel.js"), False), StaticPathConfig(
         "/netcraze_vpn/routes-panel.js", str(Path(__file__).parent / "routes-panel.js"), False), StaticPathConfig(
-        "/netcraze_vpn/localization.js", str(Path(__file__).parent / "localization.js"), False)])
+        "/netcraze_vpn/localization.js", str(Path(__file__).parent / "localization.js"), False), StaticPathConfig(
+        "/netcraze_vpn/locales/de.js", str(Path(__file__).parent / "locales" / "de.js"), False), StaticPathConfig(
+        "/netcraze_vpn/locales/es.js", str(Path(__file__).parent / "locales" / "es.js"), False), StaticPathConfig(
+        "/netcraze_vpn/locales/zh.js", str(Path(__file__).parent / "locales" / "zh.js"), False)])
     websocket_api.async_register_command(hass, ws_state)
     websocket_api.async_register_command(hass, ws_action)
     return True
@@ -38,7 +41,7 @@ async def async_setup_entry(hass, entry):
     except Exception:
         controller.message = "Роутер недоступен. Нажмите «Обновить состояние» после восстановления связи."
     await panel_custom.async_register_panel(hass, "ha-happ", "netcraze-vpn-panel", sidebar_title="HA HAPP",
-        sidebar_icon="mdi:shield-lock", module_url="/netcraze_vpn/panel.js?v=0.1.0", require_admin=True)
+        sidebar_icon="mdi:shield-lock", module_url="/netcraze_vpn/panel.js?v=0.1.1", require_admin=True)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(async_track_time_interval(hass, controller.poll, timedelta(seconds=30)))
     return True

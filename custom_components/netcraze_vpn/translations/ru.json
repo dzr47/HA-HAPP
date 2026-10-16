@@ -19,5 +19,34 @@
     "abort": {
       "already_configured": "Этот роутер уже добавлен."
     }
+  },
+  "entity": {
+    "button": {
+      "refresh": {
+        "name": "VPN — обновить подписки"
+      },
+      "probe": {
+        "name": "VPN — проверить VPN и сервисы"
+      },
+      "status": {
+        "name": "VPN — обновить состояние"
+      },
+      "device_sync": {
+        "name": "VPN — обновить устройства NDMS"
+      }
+    },
+    "switch": {
+      "enabled": {
+        "name": "VPN — основное устройство"
+      },
+      "group_enabled": {
+        "name": "VPN — список устройств"
+      }
+    },
+    "sensor": {
+      "server": {
+        "name": "VPN — сервер"
+      }
+    }
   }
 }

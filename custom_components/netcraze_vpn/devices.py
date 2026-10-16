@@ -17,7 +17,7 @@ def category(name, hostname):
     for kind, pattern in (
         ("tablet", r"планшет|ipad|\btablet\b|galaxy[ -]?tab|\bmi[ -]?pad\b"),
         ("tv", r"телевизор|\bsmart[ -]?tv\b|\b(?:apple[ -]?)?tv\b|bravia|webos|tizen"),
-        ("phone", r"смартфон|телефон|iphone|\bphone\b|redmi|poco|pixel|galaxy|android"),
+        ("phone", r"смартфон|телефон|iphone|\bphone\b|redmi|poco|pixel|galaxy|android|(?:^|[\s_-])(?:sm-)?[ams][0-9]{2}(?:[\s_-]|$)"),
         ("computer", r"ноутбук|компьютер|macbook|laptop|desktop|\bpc\b|imac"),
     ):
         if re.search(pattern, text):

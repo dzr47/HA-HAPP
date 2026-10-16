@@ -11,7 +11,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 
 class VPNSwitch(SwitchEntity):
-    _attr_name = "VPN — основное устройство"
+    _attr_has_entity_name = True
+    _attr_translation_key = "enabled"
     _attr_icon = "mdi:shield-lock"
     def __init__(self, controller, entry_id):
         self.controller = controller
@@ -37,7 +38,7 @@ class VPNSwitch(SwitchEntity):
 
 
 class VPNGroupSwitch(VPNSwitch):
-    _attr_name = "VPN — список устройств"
+    _attr_translation_key = "group_enabled"
 
     def __init__(self, controller, entry_id):
         super().__init__(controller, entry_id)

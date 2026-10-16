@@ -1,0 +1,52 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Vorhandenes NetCraze/XKeen-VPN",
+        "description": "Erfordert eine vorhandene Xray/XKeen-Konfiguration und lokalen NDW2-Administratorzugriff. Das Hauptgerät muss bereits im Router registriert sein.",
+        "data": {
+          "host": "IPv4-Adresse des Routers",
+          "username": "Routeradministrator",
+          "password": "Routerpasswort",
+          "client_mac": "MAC-Adresse des Hauptgeräts",
+          "policy": "ID der VPN-Zugriffsrichtlinie"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Die erwartete Xray-Konfiguration konnte nicht gelesen werden. Prüfen Sie Router, Zugangsdaten und VPN-Konfiguration."
+    },
+    "abort": {
+      "already_configured": "Dieser Router ist bereits konfiguriert."
+    }
+  },
+  "entity": {
+    "button": {
+      "refresh": {
+        "name": "VPN — Abonnements aktualisieren"
+      },
+      "probe": {
+        "name": "VPN — VPN und Dienste prüfen"
+      },
+      "status": {
+        "name": "VPN — Status aktualisieren"
+      },
+      "device_sync": {
+        "name": "VPN — NDMS-Geräte aktualisieren"
+      }
+    },
+    "switch": {
+      "enabled": {
+        "name": "VPN — Hauptgerät"
+      },
+      "group_enabled": {
+        "name": "VPN — Geräteliste"
+      }
+    },
+    "sensor": {
+      "server": {
+        "name": "VPN — Server"
+      }
+    }
+  }
+}

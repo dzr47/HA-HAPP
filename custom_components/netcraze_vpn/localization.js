@@ -1,5 +1,13 @@
 /* Presentation-only translations; no router or Home Assistant state is modified. */
-export const locale = language => language === "ru" ? "ru-RU" : "en-US";
+import german from './locales/de.js?v=0.1.1';
+import spanish from './locales/es.js?v=0.1.1';
+import chinese from './locales/zh.js?v=0.1.1';
+
+export const locale = language => ({ru:"ru-RU",en:"en-US",de:"de-DE",es:"es-ES",zh:"zh-CN"})[language] || "en-US";
+export const languageFromHA = value => {
+  const current=String(value || "en").toLowerCase();
+  return ["ru","en","de","es","zh"].find(language=>current.startsWith(language)) || "en";
+};
 
 const english = [
   // Main panel and server selection.
@@ -46,6 +54,8 @@ const english = [
   ["Замена ссылки подписки", "Replace subscription URL"],
   ["Добавить подписку", "Add subscription"], ["Название", "Name"],
   ["Основная подписка", "Primary subscription"],
+  ["Язык панели", "Panel language"], ["Выбрать", "Select"],
+  ["Панель VPN недоступна. Проверьте интеграцию и права администратора.", "VPN panel unavailable. Check the integration and administrator access."],
   ["Ссылка HTTPS", "HTTPS URL"], ["Вставьте ссылку подписки", "Paste subscription URL"],
   ["Проверить и сохранить", "Validate and save"], ["Отменить замену", "Cancel replacement"],
   ["Можно добавить несколько источников. Ссылки и ключи не показываются в состояниях HA и истории. Обновление списка не меняет активный сервер. Поддерживаются VLESS TCP REALITY.", "You can add multiple sources. URLs and keys are not shown in Home Assistant states or history. Updating the list does not change the active server. VLESS TCP REALITY is supported."],
@@ -220,18 +230,27 @@ const english = [
   ["Роутер не подтвердил правила сайтов", "Router did not confirm the site rules"],
 ];
 
-const ordered = english.sort((a, b) => b[0].length - a[0].length);
+const translations={de:german,es:spanish,zh:chinese};
+const ordered=english.sort((a,b)=>b[0].length-a[0].length);
+const durations={en:["ms","s"],de:["ms","s"],es:["ms","s"],zh:["毫秒","秒"]};
 export function translate(language, text) {
-  if (language !== "en" || !/[А-Яа-яЁё]/.test(text)) return text;
+  if (language === "ru" || !/[А-Яа-яЁё]/.test(text)) return text;
   let result = text;
-  for (const [source, target] of ordered) result = result.replaceAll(source, target);
-  return result.replace(/(\d+) из (\d+) через VPN/g, "$1 of $2 using VPN")
-    .replace(/(\d+) из (\d+)/g, "$1 of $2")
-    .replace(/(\d+) мс/g, "$1 ms").replace(/(\d+) с(?=\s|$|·)/g, "$1 s");
+  const dictionary=translations[language] || {};
+  for (const [source, englishText] of ordered) result=result.replaceAll(source,dictionary[source] || englishText);
+  const [milliseconds,seconds]=durations[language] || durations.en;
+  return result.replace(/(\d+) из (\d+) через VPN/g,language==="en"?"$1 of $2 using VPN":language==="de"?"$1 von $2 über VPN":language==="es"?"$1 de $2 por VPN":"$1/$2 使用 VPN")
+    .replace(/(\d+) из (\d+)/g,language==="en"?"$1 of $2":language==="de"?"$1 von $2":language==="es"?"$1 de $2":"$1/$2")
+    .replace(/(\d+) мс/g,`$1 ${milliseconds}`).replace(/(\d+) с(?=\s|$|·)/g,`$1 ${seconds}`);
+}
+
+export function displaySourceName(language, name) {
+  if (!/^Основная подписка Happ$/i.test(String(name || ""))) return name;
+  return ({ru:"Основная подписка Happ",en:"Primary HAPP subscription",de:"HAPP-Hauptabonnement",es:"Suscripción principal de HAPP",zh:"HAPP 主订阅"})[language] || name;
 }
 
 export function localize(root, language) {
-  if (language !== "en" || !root) return;
+  if (language === "ru" || !root) return;
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   while (walker.nextNode()) {
     const node = walker.currentNode;

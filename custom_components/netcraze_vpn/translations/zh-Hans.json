@@ -1,0 +1,52 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "现有 NetCraze/XKeen VPN",
+        "description": "需要现有的 Xray/XKeen 配置和本地 NDW2 管理员访问权限。主设备必须已在路由器上注册。",
+        "data": {
+          "host": "路由器 IPv4 地址",
+          "username": "路由器管理员",
+          "password": "路由器密码",
+          "client_mac": "主设备 MAC 地址",
+          "policy": "VPN 访问策略 ID"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "无法读取预期的 Xray 配置。请检查路由器、凭据和 VPN 配置。"
+    },
+    "abort": {
+      "already_configured": "此路由器已配置。"
+    }
+  },
+  "entity": {
+    "button": {
+      "refresh": {
+        "name": "VPN — 更新订阅"
+      },
+      "probe": {
+        "name": "VPN — 检查 VPN 和服务"
+      },
+      "status": {
+        "name": "VPN — 更新状态"
+      },
+      "device_sync": {
+        "name": "VPN — 更新 NDMS 设备"
+      }
+    },
+    "switch": {
+      "enabled": {
+        "name": "VPN — 主设备"
+      },
+      "group_enabled": {
+        "name": "VPN — 设备列表"
+      }
+    },
+    "sensor": {
+      "server": {
+        "name": "VPN — 服务器"
+      }
+    }
+  }
+}

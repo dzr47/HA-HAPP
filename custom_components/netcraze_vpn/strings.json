@@ -19,5 +19,34 @@
     "abort": {
       "already_configured": "This router is already configured."
     }
+  },
+  "entity": {
+    "button": {
+      "refresh": {
+        "name": "VPN — refresh subscriptions"
+      },
+      "probe": {
+        "name": "VPN — check VPN and services"
+      },
+      "status": {
+        "name": "VPN — refresh status"
+      },
+      "device_sync": {
+        "name": "VPN — refresh NDMS devices"
+      }
+    },
+    "switch": {
+      "enabled": {
+        "name": "VPN — main device"
+      },
+      "group_enabled": {
+        "name": "VPN — device list"
+      }
+    },
+    "sensor": {
+      "server": {
+        "name": "VPN — server"
+      }
+    }
   }
 }

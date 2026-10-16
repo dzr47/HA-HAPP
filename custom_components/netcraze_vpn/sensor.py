@@ -10,7 +10,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 
 class VPNStatus(SensorEntity):
-    _attr_name = "VPN — сервер"
+    _attr_has_entity_name = True
+    _attr_translation_key = "server"
     _attr_icon = "mdi:server-network"
     def __init__(self, controller, entry_id):
         self.controller = controller
