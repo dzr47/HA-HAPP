@@ -41,7 +41,7 @@ async def async_setup_entry(hass, entry):
     except Exception:
         controller.message = "Роутер недоступен. Нажмите «Обновить состояние» после восстановления связи."
     await panel_custom.async_register_panel(hass, "ha-happ", "netcraze-vpn-panel", sidebar_title="HA HAPP",
-        sidebar_icon="mdi:shield-lock", module_url="/netcraze_vpn/panel.js?v=0.1.1", require_admin=True)
+        sidebar_icon="mdi:shield-lock", module_url="/netcraze_vpn/panel.js?v=0.1.3", require_admin=True)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(async_track_time_interval(hass, controller.poll, timedelta(seconds=30)))
     return True
