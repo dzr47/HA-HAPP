@@ -1,7 +1,7 @@
 /* Presentation-only translations; no router or Home Assistant state is modified. */
-import german from './locales/de.js?v=0.1.1';
-import spanish from './locales/es.js?v=0.1.1';
-import chinese from './locales/zh.js?v=0.1.1';
+import german from './locales/de.js?v=0.1.2';
+import spanish from './locales/es.js?v=0.1.2';
+import chinese from './locales/zh.js?v=0.1.2';
 
 export const locale = language => ({ru:"ru-RU",en:"en-US",de:"de-DE",es:"es-ES",zh:"zh-CN"})[language] || "en-US";
 export const languageFromHA = value => {
@@ -13,6 +13,9 @@ const english = [
   // Main panel and server selection.
   ["VPN дома", "Home VPN"],
   ["Открыть меню", "Open menu"],
+  ["Разделы панели", "Panel sections"],
+  ["Обновить список и применить", "Update list and apply"],
+  ["Обновляет VPN-список, проверяет конфигурацию и сразу применяет маршрутизацию: сайты из списка идут через VPN, остальной трафик — напрямую.", "Updates the VPN list, validates the configuration and applies routing: listed sites use the VPN; all other traffic goes direct."],
   ["Управление VPN на роутере для выбранных устройств дома.", "Manage the router VPN for selected devices at home."],
   ["Обновить список сервисов", "Update service list"],
   ["Последнее обновление:", "Last updated:"],
@@ -37,6 +40,10 @@ const english = [
   ["Серверы", "Servers"],
   ["Обновить все подписки", "Update all subscriptions"],
   ["Проверить VPN", "Check VPN"],
+  ["Проверить все серверы", "Check all servers"],
+  ["Проверка обновляет TCP-задержку и запускает один общий список сервисов через каждый сервер. Выбор строки не переключает роутер.", "This check updates TCP latency and tests the same service list through every server. Selecting a row does not switch the router."],
+  ["Как выполняется проверка", "How the check works"],
+  ["TCP измеряется с Home Assistant, а HTTPS — с роутера. Проверка запускает шесть одинаковых сервисов для каждого сервера.", "TCP latency is measured from Home Assistant; HTTPS checks run from the router. The same six services are checked for every server."],
   ["«Проверить VPN» обновляет TCP-задержку всех серверов и проверяет один общий список из шести сервисов через каждый сервер. TCP измеряется с HA (не ICMP ping), HTTPS — с роутера. Выбор строки не переключает роутер.", "Check VPN updates TCP latency for every server and checks the same six services through each server. TCP is measured from Home Assistant (not ICMP ping); HTTPS is checked from the router. Selecting a row does not switch the router."],
   ["Выбор", "Select"], ["Сервер", "Server"], ["Проверка VPN", "VPN check"],
   ["На роутере", "On router"], ["Нет ответа", "No response"],
@@ -48,6 +55,9 @@ const english = [
   ["Запросы идут с роутера через выбранный сервер, даже если он ещё не применён. Доступность страницы не гарантирует вход в аккаунт, звонки MAX, работу Telegram-приложения или видео YouTube. 403/429 может означать защиту сайта или ограничения IP. Время включает VPN и HTTPS; это не ping и не тест скорости.", "Requests run from the router through the selected server, even before it is applied. A reachable page does not prove account sign-in, MAX calls, the Telegram app or YouTube video playback. HTTP 403/429 may reflect site protection or IP restrictions. Timing includes VPN and HTTPS; it is not a ping or speed test."],
   ["Перед применением: проверка Xray и HTTPS, резервная копия. После переключения: повторная проверка; при ошибке — возврат предыдущей конфигурации. Текущие соединения телефона могут переподключиться.", "Before applying: Xray and HTTPS checks, then a backup. After switching: another check and rollback on failure. Existing phone connections may reconnect."],
   ["Первый ответ:", "First byte:"], ["Всего:", "Total:"],
+  ["Технические детали", "Technical details"],
+  ["Что именно проверяется", "What is checked"],
+  ["Нажмите «Проверить все серверы», чтобы измерить задержку и проверить доступность сервисов через каждый сервер.", "Select Check all servers to measure latency and check service availability through every server."],
   ["Подписки", "Subscriptions"], ["Обновлено:", "Updated:"],
   ["Пропущено неподдерживаемых:", "Unsupported entries skipped:"],
   ["Обновить", "Refresh"], ["Заменить ссылку", "Replace URL"], ["Удалить источник", "Delete source"],
@@ -73,6 +83,9 @@ const english = [
   ["В сети", "Online"], ["Не в сети", "Offline"],
   ["VPN для", "VPN for"], ["Убрать", "Remove"],
   ["из списка", "from list"], ["Через VPN Happ", "Through HA HAPP VPN"],
+  ["Сейчас через VPN Happ", "Currently using HA HAPP VPN"],
+  ["VPN назначен — включится при подключении", "VPN assigned; it will activate when the device connects"],
+  ["Показать IP и MAC", "Show IP and MAC"], ["IP:", "IP:"], ["MAC:", "MAC:"],
   ["Другая политика:", "Other policy:"],
   ["Обычный интернет", "Direct internet"],
   ["Добавьте смартфон, планшет, телевизор или другое устройство кнопкой «+».", "Use Add devices to add a phone, tablet, TV or another device."],
@@ -96,6 +109,9 @@ const english = [
 
   // Site routing.
   ["Маршрутизация сайтов", "Site routing"],
+  ["VPN-список · Последнее обновление:", "VPN list · Last updated:"],
+  ["Для устройств с включённым VPN маршруты из списка идут через туннель, остальные — напрямую.", "For devices with VPN enabled, routes in this list use the tunnel; all other destinations go direct."],
+  ["Изменить список", "Edit list"],
   ["Списки маршрутов", "Route lists"],
   ["Для устройств, которым включён VPN. Загрузка обновляет список, проверяет конфигурацию и сразу применяет её: записи источника идут через VPN, всё остальное — напрямую.", "Applies to devices with VPN enabled. Updating the list validates and applies the configuration immediately: listed destinations use VPN and all others go direct."],
   ["Режим правил", "Routing mode"],
