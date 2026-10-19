@@ -1,5 +1,5 @@
 /* Domain list drafts are held only in memory and authenticated HA Store. */
-import {localize, locale} from './localization.js?v=0.1.2';
+import {localize, locale} from './localization.js?v=0.1.3';
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 class VPNRoutes extends HTMLElement {
   constructor(){super();this.attachShadow({mode:"open"});this.drafts={};this.loaded={};this.pending={};this.error="";this.key="";}

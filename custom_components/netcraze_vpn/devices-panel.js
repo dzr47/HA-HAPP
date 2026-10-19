@@ -1,5 +1,5 @@
 /* Device selection stays inside authenticated HA; no inventory in localStorage. */
-import {localize, locale, translate} from './localization.js?v=0.1.2';
+import {localize, locale, translate} from './localization.js?v=0.1.3';
 const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const icons = {phone:"mdi:cellphone",tablet:"mdi:tablet",tv:"mdi:television",computer:"mdi:laptop",other:"mdi:devices"};
 const transliteration = {а:"a",б:"b",в:"v",г:"g",д:"d",е:"e",ё:"yo",ж:"zh",з:"z",и:"i",й:"y",к:"k",л:"l",м:"m",н:"n",о:"o",п:"p",р:"r",с:"s",т:"t",у:"u",ф:"f",х:"kh",ц:"ts",ч:"ch",ш:"sh",щ:"shch",ъ:"",ы:"y",ь:"",э:"e",ю:"yu",я:"ya"};

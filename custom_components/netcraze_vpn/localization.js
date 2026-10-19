@@ -1,7 +1,7 @@
 /* Presentation-only translations; no router or Home Assistant state is modified. */
-import german from './locales/de.js?v=0.1.2';
-import spanish from './locales/es.js?v=0.1.2';
-import chinese from './locales/zh.js?v=0.1.2';
+import german from './locales/de.js?v=0.1.3';
+import spanish from './locales/es.js?v=0.1.3';
+import chinese from './locales/zh.js?v=0.1.3';
 
 export const locale = language => ({ru:"ru-RU",en:"en-US",de:"de-DE",es:"es-ES",zh:"zh-CN"})[language] || "en-US";
 export const languageFromHA = value => {
@@ -244,6 +244,43 @@ const english = [
   ["Сначала сохраните HTTPS-источник списка VPN в разделе «Маршрутизация сайтов»", "Save an HTTPS source for the VPN list under Site routing first"],
   ["Сначала проверьте правила; после изменения списков или роутера проверка нужна заново", "Validate the rules first; changes to the lists or router require another validation"],
   ["Роутер не подтвердил правила сайтов", "Router did not confirm the site rules"],
+  ["Обзор", "Overview"], ["Устройства", "Devices"], ["Маршруты", "Routes"],
+  ["Состояние VPN", "VPN status"], ["Активный сервер", "Active server"],
+  ["Сейчас настроен на роутере", "Currently configured on the router"], ["сайтов в VPN-списке", "sites in the VPN list"],
+  ["Управление VPN для устройств", "Device VPN controls"],
+  ["Можно включить VPN для всего списка или оставить устройства на обычном подключении.", "Enable VPN for the whole list or keep devices on the direct connection."],
+  ["Включить VPN для всех", "Enable VPN for all"], ["Выключить VPN для всех", "Disable VPN for all"],
+  ["Запускаю:", "Starting:"], ["Запрос принят:", "Request accepted:"], ["Выполняется:", "In progress:"],
+  ["Готово:", "Completed:"], ["Не выполнено:", "Failed:"], ["Операция завершена.", "Operation completed."],
+  ["Операция не выполнена", "Operation failed"], ["Нет подтверждения завершения. Проверьте состояние перед повтором.", "Completion was not confirmed. Check the current state before retrying."],
+  ["Не удалось отобразить панель VPN. Перезагрузите страницу или проверьте интеграцию.", "The VPN panel could not be displayed. Reload the page or check the integration."],
+  ["Прошло", "Elapsed"], ["Время выполнения", "Duration"], ["сек", "s"], ["мин", "min"], ["Закрыть уведомление", "Dismiss notification"],
+  ["Проверка состояния роутера", "Checking router status"], ["Обновление подписок", "Refreshing subscriptions"],
+  ["Проверка серверов", "Checking servers"], ["Применение выбранного сервера", "Applying selected server"],
+  ["Выбор сервера", "Selecting server"], ["Изменение VPN для всех устройств", "Changing VPN for all devices"],
+  ["Изменение VPN устройства", "Changing device VPN"], ["Синхронизация устройств с NDMS", "Syncing devices with NDMS"],
+  ["Добавление устройства", "Adding device"], ["Удаление устройства из VPN", "Removing device from VPN"],
+  ["Сохранение списка маршрутов", "Saving route list"], ["Сохранение режима маршрутизации", "Saving routing mode"],
+  ["Обновление источников маршрутов", "Refreshing route sources"], ["Обновление VPN-списка и применение", "Updating and applying VPN list"],
+  ["Проверка правил маршрутизации", "Validating routing rules"], ["Применение правил маршрутизации", "Applying routing rules"],
+  ["Сохранение подписки", "Saving subscription"], ["Удаление источника подписки", "Deleting subscription source"],
+  ["Состояние роутера и политики устройств перечитаны.", "Router status and device policies were refreshed."],
+  ["Подписки обновлены. Активный сервер не менялся.", "Subscriptions were refreshed. The active server was not changed."],
+  ["Проверка серверов завершена.", "Server checks completed."], ["Роутер подтвердил выбранный сервер.", "The router confirmed the selected server."],
+  ["Сервер выбран. Настройки роутера не менялись.", "Server selected. Router settings were not changed."],
+  ["Политики устройств подтверждены NDMS.", "Device policies were confirmed by NDMS."],
+  ["NDMS подтвердил политику устройства.", "NDMS confirmed the device policy."], ["Список устройств обновлён из NDMS.", "Device list was refreshed from NDMS."],
+  ["Устройство добавлено в список. Это само по себе не включает VPN.", "Device added to the list. This does not enable VPN by itself."],
+  ["Устройство удалено из списка VPN.", "Device removed from the VPN list."],
+  ["Список сохранён. Чтобы изменить маршрутизацию, проверьте и примените правила.", "List saved. Validate and apply the rules to change routing."],
+  ["Режим сохранён. Для изменения на роутере проверьте и примените правила.", "Mode saved. Validate and apply the rules to change router routing."],
+  ["Источники списков обновлены. Проверьте и примените правила.", "List sources were refreshed. Validate and apply the rules."],
+  ["VPN-список обновлён, проверен и применён.", "VPN list was refreshed, validated and applied."],
+  ["Правила проверены. Их можно применить.", "Rules validated. They are ready to apply."],
+  ["Проверка завершена; проверьте результат перед применением.", "Validation finished; review the result before applying."],
+  ["Роутер подтвердил применение правил.", "The router confirmed that the rules were applied."],
+  ["Подписка проверена и сохранена. Активный сервер не менялся.", "Subscription validated and saved. The active server was not changed."],
+  ["Источник подписки удалён.", "Subscription source deleted."], ["Состояние роутера и политики устройств перечитаны.", "Router status and device policies were refreshed."]
 ];
 
 const translations={de:german,es:spanish,zh:chinese};
