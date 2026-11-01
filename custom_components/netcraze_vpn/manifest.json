@@ -1,14 +1,20 @@
 {
   "domain": "netcraze_vpn",
   "name": "HA HAPP (NetCraze/XKeen)",
-  "codeowners": ["@dzr47"],
+  "codeowners": [
+    "@dzr47"
+  ],
   "config_flow": true,
-  "dependencies": ["frontend", "http", "panel_custom"],
+  "dependencies": [
+    "frontend",
+    "http",
+    "panel_custom"
+  ],
   "documentation": "https://github.com/dzr47/HA-HAPP",
   "integration_type": "hub",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/dzr47/HA-HAPP/issues",
   "requirements": [],
   "single_config_entry": true,
-  "version": "0.1.3"
+  "version": "0.1.4"
 }

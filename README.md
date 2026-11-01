@@ -22,10 +22,11 @@ Installing this integration does **not** install XKeen, Xray, a VPN server, or r
 
 - Manage up to ten HTTPS subscription sources, select a VLESS REALITY node, and apply it with Xray validation, router backup and rollback on a failed check.
 - Show registered NDMS clients, including offline devices; select which clients use the existing VPN policy and restore their previous policy when disabled. Device categories are search hints inferred from NDMS names and model numbers. Search accepts common Cyrillic to Latin transliteration; it does not rename devices on the router.
+- A separate **VPN for all devices** switch temporarily overrides the device list and site rules. It assigns the VPN policy to the router default, segment rules and all internet-permitted registered clients, and sends intercepted external TCP/UDP traffic to the active VPN node. Turning it off restores the exact prior policies and site rules. New or changed registered clients are reconciled by the integration poll; unregistered clients inherit the router default. The router's own tunnel transport and local network traffic remain outside the tunnel.
 - Check TCP connection time from Home Assistant and HTTPS responses through each VPN node on the router. The current fixed probes are MAX Web, Gosuslugi, ChatGPT, Instagram, Telegram Web and YouTube. A page response does not prove an app login, call or video stream works.
 - Import site routing lists from text or an HTTPS URL. Without a configured source, the “update VPN list” button reports that a source is needed. The site-routing mode starts **off**; a successful VPN-list sync selects “VPN only for listed sites” and applies the checked Xray config.
 
-The integration does not automatically choose a server or refresh sources on a schedule. Router configuration changes are explicit panel actions. Other devices keep their existing NDMS policies.
+The integration does not automatically choose a server or refresh sources on a schedule. Router configuration changes are explicit panel actions, except that an active global override reasserts the VPN policy if a client is given a conflicting personal policy. With the global switch off, other devices keep their existing NDMS policies.
 
 ## Install through HACS
 

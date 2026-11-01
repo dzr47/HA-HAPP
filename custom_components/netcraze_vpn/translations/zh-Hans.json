@@ -41,6 +41,9 @@
       },
       "group_enabled": {
         "name": "VPN — 设备列表"
+      },
+      "all_devices_enabled": {
+        "name": "VPN — 所有设备"
       }
     },
     "sensor": {

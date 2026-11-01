@@ -41,6 +41,9 @@
       },
       "group_enabled": {
         "name": "VPN — Geräteliste"
+      },
+      "all_devices_enabled": {
+        "name": "VPN — alle Geräte"
       }
     },
     "sensor": {

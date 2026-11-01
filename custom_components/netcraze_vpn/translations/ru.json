@@ -41,6 +41,9 @@
       },
       "group_enabled": {
         "name": "VPN — список устройств"
+      },
+      "all_devices_enabled": {
+        "name": "VPN — все устройства"
       }
     },
     "sensor": {

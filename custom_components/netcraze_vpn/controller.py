@@ -222,6 +222,8 @@ class Controller:
         self.devices = Devices(self)
         from .site_routes import SiteRoutes
         self.site_routes = SiteRoutes(self)
+        from .global_mode import GlobalMode
+        self.global_mode = GlobalMode(self)
 
     async def load(self):
         self.data.update(await self.store.async_load() or {})
@@ -237,11 +239,17 @@ class Controller:
             if self.busy:
                 return
             try:
+                try:
+                    await self.global_mode.reconcile_hosts()
+                except ControlError:
+                    pass  # The next read reports a degraded global mode.
                 await self.refresh_status()
             except Exception:
                 self.router_available = False
 
     async def refresh_status(self):
+        if self.global_mode.data.get("phase"):
+            await self.global_mode.recover()
         raw, config = await self.router.read_config()
         self.site_routes.observe(raw, config)
         active = next(o for o in config["outbounds"] if o.get("tag") == "vpn-1")
@@ -251,6 +259,7 @@ class Controller:
         self.data["active"] = matches[0] if matches else "existing"
         self.data["active_name"] = self.data["nodes"].get(self.data["active"], {}).get("name", "Текущий сервер роутера")
         await self.devices.sync()
+        await self.global_mode.observe(config)
         self.router_available = True
 
     async def client_policy(self):
@@ -272,6 +281,7 @@ class Controller:
                 "selected": self.data["selected"], "mode": self.data["mode"],
                 "client_mac": self.entry.data["client_mac"],
                 "clients": self.devices.public(),
+                "global_vpn": self.global_mode.public(),
                 "site_routes": self.site_routes.public(),
                 "sources": [{"id": key, "name": s["name"], "host": urlsplit(s["url"]).hostname,
                              "updated": s.get("updated"), "error": s.get("error"), "skipped": s.get("skipped", 0)}
@@ -293,7 +303,7 @@ class Controller:
                 if action not in ("status", "device_sync", "select", "refresh", "source_save", "source_delete",
                                   "routes_save", "routes_mode", "routes_refresh"):
                     await self.router.ensure_idle()
-                async with asyncio.timeout(120):
+                async with asyncio.timeout(240 if action == "global_mode" else 120):
                     await self.execute(action, payload)
                 await self.save()
                 if action == "status":
@@ -488,6 +498,14 @@ trap - EXIT
 ''')
 
     async def execute(self, action, payload):
+        if action == "global_mode":
+            await self.global_mode.set(payload.get("enabled"))
+            return
+        if self.global_mode.enabled and action in (
+                "mode", "group_mode", "device_add", "device_remove", "device_set",
+                "routes_save", "routes_mode", "routes_refresh", "routes_sync_vpn",
+                "routes_validate", "routes_apply"):
+            raise ControlError("Сначала выключите приоритетный VPN для всех устройств")
         if action == "routes_save":
             await self.site_routes.save_list(payload)
         elif action == "routes_refresh":

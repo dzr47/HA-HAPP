@@ -78,7 +78,7 @@ class Devices:
                 bridge = self.members.get(mac, {}).get("bridge", "")
             policy = cfg.get("policy") or None
             # Adopt explicit assignments made in the stock NDMS UI; never enforce them periodically.
-            if policy == self.policy and mac not in self.members:
+            if policy == self.policy and mac not in self.members and not self.c.global_mode.enabled:
                 self.members[mac] = {"previous_policy": None, "bridge": bridge}
                 changed = True
             reason = ""

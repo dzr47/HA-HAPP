@@ -1,7 +1,7 @@
 /* Local HA web component. Only the language preference is kept in localStorage. */
-import './devices-panel.js?v=0.1.3';
-import './routes-panel.js?v=0.1.3';
-import {localize, locale, languageFromHA, displaySourceName, translate} from './localization.js?v=0.1.3';
+import './devices-panel.js?v=0.1.4';
+import './routes-panel.js?v=0.1.4';
+import {localize, locale, languageFromHA, displaySourceName, translate} from './localization.js?v=0.1.4';
 const escape = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 class NetcrazeVPNPanel extends HTMLElement {
   constructor() { super(); this.attachShadow({mode:"open"}); this.s = null; this.edit = ""; this.polling = false; this.generation=0; this.panelLanguage=null; this.activeTab="overview"; this.actionProgress=null; this.operationTimer=null;
@@ -34,7 +34,7 @@ class NetcrazeVPNPanel extends HTMLElement {
     }
     if(this.polling && generation===this.generation) this.timer = setTimeout(() => this.poll(generation), this.s?.busy || this.actionProgress?.phase==="accepted" ? 400 : 5000);
   }
-  stateFingerprint(state) { return JSON.stringify([state?.message,state?.duration,state?.status_checked,state?.active,state?.selected,state?.mode,state?.clients,state?.site_routes,state?.sources,state?.nodes]); }
+  stateFingerprint(state) { return JSON.stringify([state?.message,state?.duration,state?.status_checked,state?.active,state?.selected,state?.mode,state?.global_vpn,state?.clients,state?.site_routes,state?.sources,state?.nodes]); }
   trackOperation(state) {
     const op=this.actionProgress;if(!op||!["starting","accepted","running"].includes(op.phase))return false;
     if(state.busy){op.seenBusy=true;if(op.accepted&&op.phase!=="running"){op.phase="running";return true;}return false;}
@@ -62,6 +62,7 @@ class NetcrazeVPNPanel extends HTMLElement {
       apply:"Роутер подтвердил выбранный сервер.",
       select:"Сервер выбран. Настройки роутера не менялись.",
       group_mode:"NDMS подтвердил политики устройств.",
+      global_mode:state.global_vpn?.enabled?"Роутер подтвердил VPN для всех устройств.":"Прежние правила устройств и сайтов восстановлены.",
       device_set:"NDMS подтвердил политику устройства.",
       device_sync:"Список устройств обновлён из NDMS.",
       device_add:"Устройство добавлено в список. Это само по себе не включает VPN.",
@@ -80,7 +81,7 @@ class NetcrazeVPNPanel extends HTMLElement {
   actionName(key) {
     return translate(this.panelLanguage,({
       status:"Проверка состояния роутера",refresh:"Обновление подписок",check:"Проверка серверов",apply:"Применение выбранного сервера",
-      select:"Выбор сервера",group_mode:"Изменение VPN для всех устройств",device_set:"Изменение VPN устройства",device_sync:"Синхронизация устройств с NDMS",
+      select:"Выбор сервера",group_mode:"Изменение VPN для списка устройств",global_mode:"Изменение VPN для всех устройств",device_set:"Изменение VPN устройства",device_sync:"Синхронизация устройств с NDMS",
       device_add:"Добавление устройства",device_remove:"Удаление устройства из VPN",routes_save:"Сохранение списка маршрутов",routes_mode:"Сохранение режима маршрутизации",
       routes_refresh:"Обновление источников маршрутов",routes_sync_vpn:"Обновление VPN-списка и применение",routes_validate:"Проверка правил маршрутизации",
       routes_apply:"Применение правил маршрутизации",source_save:"Сохранение подписки",source_delete:"Удаление источника подписки"
@@ -139,11 +140,12 @@ class NetcrazeVPNPanel extends HTMLElement {
       .tab-panel[hidden]{display:none}.operation-feedback{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;margin:12px 0;border:1px solid var(--divider-color);border-left:4px solid var(--primary-color);border-radius:8px;background:var(--card-background-color)}.operation-feedback[data-phase="success"]{border-left-color:var(--success-color,#2e7d32)}.operation-feedback[data-phase="error"]{border-left-color:var(--error-color,#d32f2f)}.operation-copy{flex:1;min-width:0}.operation-title{font-weight:650}.operation-result{margin-top:4px;color:var(--secondary-text-color);line-height:1.45}.operation-dismiss{flex:0 0 auto;padding:4px 9px}.operation-elapsed{display:block;margin-top:3px;font-size:13px;color:var(--secondary-text-color)}.operation-spin{display:inline-block;margin-right:5px}
       .overview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:4px 0 18px}.overview-metric{min-width:0;padding:14px;border:1px solid var(--divider-color);border-radius:10px;background:var(--secondary-background-color)}.overview-metric span{display:block;color:var(--secondary-text-color);font-size:13px}.overview-metric strong{display:block;margin-top:5px;font-size:17px;overflow-wrap:anywhere}.overview-metric small{display:block;margin-top:4px}
       .group-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}.group-actions button{min-height:42px}.group-actions button[data-group-mode="vpn"]{background:var(--primary-color);color:var(--text-primary-color,#fff)}
+      .global-control{border-color:var(--primary-color);margin-bottom:14px}.global-control button{min-width:92px;font-weight:700}.global-control button[aria-checked="true"]{background:#2e7d32;color:#fff}.global-warning{color:var(--error-color);font-weight:700}
       @media(max-width:700px){.overview-grid{grid-template-columns:1fr 1fr}.section-nav{padding:6px 2px}.section-nav button{padding:9px 10px;font-size:13px}.operation-feedback{gap:8px}}
       @media(max-width:430px){.overview-grid{grid-template-columns:1fr}.section-nav-inner{gap:3px}.section-nav button{padding:8px 9px}}
       @media(max-width:600px){main{padding:14px 10px 50px}section{padding:16px} .row button{flex:1}h1{font-size:24px}}
       </style><main lang="${this.panelLanguage==="zh"?"zh-Hans":this.panelLanguage}"><header><button class="menu" id="menu" aria-label="Открыть меню">☰</button><h1>VPN дома</h1><span class="badge">NetCraze</span><label class="language">Язык панели <select id="panel-language" aria-label="Язык панели"><option data-no-translate value="ru" ${this.panelLanguage==="ru"?"selected":""}>Русский</option><option data-no-translate value="en" ${this.panelLanguage==="en"?"selected":""}>English</option><option data-no-translate value="de" ${this.panelLanguage==="de"?"selected":""}>Deutsch</option><option data-no-translate value="es" ${this.panelLanguage==="es"?"selected":""}>Español</option><option data-no-translate value="zh" ${this.panelLanguage==="zh"?"selected":""}>简体中文</option></select></label></header>
-      <p class="lead">Управление VPN на роутере для выбранных устройств дома.</p>
+      <p class="lead">Управление VPN на роутере для всех устройств или выбранного списка.</p>
       <nav class="section-nav" aria-label="Разделы панели"><div class="section-nav-inner"><button data-jump="connection">Подключение</button><button data-jump="device-slot">Устройства VPN</button><button data-jump="servers">Серверы</button><button data-jump="routes-slot">Маршрутизация сайтов</button><button data-jump="subscriptions">Подписки</button></div></nav>
       <section><div class="row"><button id="vpn-list-sync" class="vpn-list-sync" ${disabled}>Обновить список и применить</button></div><p class="sync-meta">Последнее обновление: ${escape(date(s.site_routes?.lists?.vpn?.updated))}${s.site_routes?.lists?.vpn?.count?` · ${s.site_routes.lists.vpn.count} адресов и доменов` : ""}</p><small>Обновляет VPN-список, проверяет конфигурацию и сразу применяет маршрутизацию: сайты из списка идут через VPN, остальной трафик — напрямую.</small></section>
       ${s.busy || s.message!=="Готово"?`<div class="status" role="status" aria-live="polite">${s.busy ? "⏳ " : ""}${escape(s.message)}${s.duration !== null ? ` · ${s.duration} с` : ""}</div>`:""}<p id="error"></p>
@@ -172,10 +174,12 @@ class NetcrazeVPNPanel extends HTMLElement {
     const summary=document.createElement("section");summary.className="overview-summary";const summaryTitle=document.createElement("h2");summaryTitle.textContent="Обзор";summary.append(summaryTitle);
     const grid=document.createElement("div");grid.className="overview-grid";
     const modeText=({vpn:"Включён для всех",partial:"Включён для части устройств",direct:"Выключен для списка",other:"Другая политика",unknown:"Состояние неизвестно"})[s.mode]||"Состояние неизвестно";
-    grid.append(makeMetric("Состояние VPN",modeText,s.clients.vpn_count+" из "+s.clients.members.length+" через VPN"));
+    grid.append(makeMetric("Состояние VPN",s.global_vpn?.enabled?"VPN для всех устройств":modeText,
+      s.global_vpn?.enabled?(s.global_vpn.verified?"Подтверждено роутером":"Требуется проверка: "+s.global_vpn.reason):s.clients.vpn_count+" из "+s.clients.members.length+" через VPN"));
     grid.append(makeMetric("Активный сервер",s.active_name||"—","Сейчас настроен на роутере",true));
     const routeMode=s.site_routes?.modes?.[s.site_routes?.active_mode]||"Состояние маршрутов неизвестно";
-    grid.append(makeMetric("Маршруты",routeMode,(s.site_routes?.lists?.vpn?.count||0)+" сайтов в VPN-списке"));
+    grid.append(makeMetric("Маршруты",s.global_vpn?.enabled?"Весь внешний трафик через VPN":routeMode,
+      s.global_vpn?.enabled?"Правила сайтов возобновятся после выключения":(s.site_routes?.lists?.vpn?.count||0)+" сайтов в VPN-списке"));
     summary.append(grid);
     const syncSection=root.querySelector("#vpn-list-sync")?.closest("section"),connection=root.querySelector("#connection");
     const serverLine=[...(connection?.querySelectorAll("p")||[])].find(el=>el.textContent.includes("Активный сервер:"));
@@ -186,13 +190,20 @@ class NetcrazeVPNPanel extends HTMLElement {
     if(checkResult)checkResult.remove();
     summary.append(statusRow||document.createTextNode(""));
     summary.append(checkResult||document.createTextNode(""));
-    if(syncSection)panels.overview.append(summary,syncSection);
+    if(syncSection){syncSection.querySelector("button").disabled=uiBusy||Boolean(s.global_vpn?.enabled);panels.overview.append(summary,syncSection);}
     if(connection){
       const heading=connection.querySelector("h2");if(heading)heading.textContent="Управление VPN для устройств";
       const help=connection.querySelector(".group-copy small");if(help)help.textContent="Можно включить VPN для всего списка или оставить устройства на обычном подключении.";
       const oldToggle=connection.querySelector("#group-toggle");
       if(oldToggle){const actions=document.createElement("div");actions.className="group-actions";const modes=s.mode==="partial"?["vpn","direct"]:[s.mode==="vpn"?"direct":"vpn"];
-        for(const mode of modes){const button=document.createElement("button");button.type="button";button.dataset.groupMode=mode;button.disabled=uiBusy;button.textContent=mode==="vpn"?"Включить VPN для всех":"Выключить VPN для всех";actions.append(button);}oldToggle.replaceWith(actions);}
+        for(const mode of modes){const button=document.createElement("button");button.type="button";button.dataset.groupMode=mode;button.disabled=uiBusy||Boolean(s.global_vpn?.enabled);button.textContent=mode==="vpn"?"Включить VPN для списка":"Выключить VPN для списка";actions.append(button);}oldToggle.replaceWith(actions);}
+      const global=document.createElement("div");global.className="group-control global-control";
+      const copy=document.createElement("div");copy.className="group-copy";
+      const title=document.createElement("h3");title.textContent="VPN для всех устройств";copy.append(title);
+      const description=document.createElement("small");description.textContent="Приоритет выше списка устройств и правил сайтов. После выключения прежние правила вернутся.";copy.append(description);
+      if(s.global_vpn?.enabled&&!s.global_vpn.verified){const warning=document.createElement("p");warning.className="global-warning";warning.textContent="Не подтверждено роутером: "+(s.global_vpn.reason||"обновите состояние");copy.append(warning);}
+      const toggle=document.createElement("button");toggle.type="button";toggle.id="global-toggle";toggle.setAttribute("role","switch");toggle.setAttribute("aria-checked",String(Boolean(s.global_vpn?.enabled)));toggle.setAttribute("aria-label","VPN для всех устройств");toggle.disabled=uiBusy;toggle.textContent=s.global_vpn?.enabled?"Включён":"Выключен";
+      global.append(copy,toggle);connection.querySelector(".group-control")?.before(global);
       panels.devices.append(connection);
     }
     const deviceSlot=root.querySelector("#device-slot");if(deviceSlot)panels.devices.append(deviceSlot);
@@ -218,8 +229,8 @@ class NetcrazeVPNPanel extends HTMLElement {
     root.querySelector("#source-name").value=draftName; root.querySelector("#source-url").value=draftUrl;
     for(const id of openDetails){const el=root.getElementById(id);if(el)el.open=true;}
     localize(root,this.panelLanguage);
-    root.querySelector("#device-slot").append(this.devicePanel); this.devicePanel.language=this.panelLanguage; this.devicePanel.state={...s,busy:uiBusy};
-    root.querySelector("#routes-slot").append(this.routesPanel); this.routesPanel.language=this.panelLanguage; this.routesPanel.state={...s,busy:uiBusy};
+    root.querySelector("#device-slot").append(this.devicePanel); this.devicePanel.language=this.panelLanguage; this.devicePanel.state={...s,busy:uiBusy||Boolean(s.global_vpn?.enabled)};
+    root.querySelector("#routes-slot").append(this.routesPanel); this.routesPanel.language=this.panelLanguage; this.routesPanel.state={...s,busy:uiBusy||Boolean(s.global_vpn?.enabled)};
     const on=(id,fn)=>root.querySelector("#"+id)?.addEventListener("click",fn);
     on("menu",()=>this.dispatchEvent(new CustomEvent("hass-toggle-menu",{bubbles:true,composed:true})));
     root.querySelector("#panel-language").onchange=event=>{
@@ -239,6 +250,7 @@ class NetcrazeVPNPanel extends HTMLElement {
     });
     for(const key of ["status","refresh","check","apply"])on(key,()=>this.action(key));
     root.querySelectorAll("[data-group-mode]").forEach(button=>button.addEventListener("click",()=>this.action("group_mode",{mode:button.dataset.groupMode})));
+    on("global-toggle",()=>this.action("global_mode",{enabled:!s.global_vpn?.enabled}));
     on("operation-dismiss",()=>{clearInterval(this.operationTimer);this.operationTimer=null;this.actionProgress=null;this.render();});
     root.querySelectorAll("[data-node]").forEach(el=>el.addEventListener("change",()=>this.action("select",{id:el.dataset.node})));
     root.querySelectorAll("[data-refresh]").forEach(el=>el.onclick=()=>this.action("refresh",{id:el.dataset.refresh}));

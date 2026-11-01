@@ -1,7 +1,7 @@
 /* Presentation-only translations; no router or Home Assistant state is modified. */
-import german from './locales/de.js?v=0.1.3';
-import spanish from './locales/es.js?v=0.1.3';
-import chinese from './locales/zh.js?v=0.1.3';
+import german from './locales/de.js?v=0.1.4';
+import spanish from './locales/es.js?v=0.1.4';
+import chinese from './locales/zh.js?v=0.1.4';
 
 export const locale = language => ({ru:"ru-RU",en:"en-US",de:"de-DE",es:"es-ES",zh:"zh-CN"})[language] || "en-US";
 export const languageFromHA = value => {
@@ -17,12 +17,23 @@ const english = [
   ["Обновить список и применить", "Update list and apply"],
   ["Обновляет VPN-список, проверяет конфигурацию и сразу применяет маршрутизацию: сайты из списка идут через VPN, остальной трафик — напрямую.", "Updates the VPN list, validates the configuration and applies routing: listed sites use the VPN; all other traffic goes direct."],
   ["Управление VPN на роутере для выбранных устройств дома.", "Manage the router VPN for selected devices at home."],
+  ["Управление VPN на роутере для всех устройств или выбранного списка.", "Manage the router VPN for all devices or a selected list."],
   ["Обновить список сервисов", "Update service list"],
   ["Последнее обновление:", "Last updated:"],
   ["адресов и доменов", "addresses and domains"],
   ["Загрузит свежий список, проверит конфигурацию Xray и применит маршрутизацию: совпадения из списка — через VPN, остальное — напрямую.", "Downloads the latest list, validates Xray and applies routing: listed sites use the VPN; everything else uses the direct connection."],
   ["Подключение", "Connection"],
   ["VPN для списка устройств", "VPN for device list"],
+  ["VPN для всех устройств", "VPN for all devices"],
+  ["Приоритет выше списка устройств и правил сайтов. После выключения прежние правила вернутся.", "Takes priority over the device list and site rules. Turning it off restores the previous rules."],
+  ["Весь внешний трафик через VPN", "All external traffic through VPN"],
+  ["Правила сайтов возобновятся после выключения", "Site rules resume when this is turned off"],
+  ["Подтверждено роутером", "Confirmed by the router"],
+  ["Требуется проверка:", "Verification needed:"],
+  ["Не подтверждено роутером:", "Not confirmed by the router:"],
+  ["обновите состояние", "refresh the status"],
+  ["Включить VPN для списка", "Enable VPN for the list"],
+  ["Выключить VPN для списка", "Disable VPN for the list"],
   ["Включён для всех", "Enabled for all"],
   ["Включён для части устройств", "Enabled for some devices"],
   ["Выключен для списка", "Disabled for the list"],
@@ -258,6 +269,7 @@ const english = [
   ["Проверка состояния роутера", "Checking router status"], ["Обновление подписок", "Refreshing subscriptions"],
   ["Проверка серверов", "Checking servers"], ["Применение выбранного сервера", "Applying selected server"],
   ["Выбор сервера", "Selecting server"], ["Изменение VPN для всех устройств", "Changing VPN for all devices"],
+  ["Изменение VPN для списка устройств", "Changing VPN for the device list"],
   ["Изменение VPN устройства", "Changing device VPN"], ["Синхронизация устройств с NDMS", "Syncing devices with NDMS"],
   ["Добавление устройства", "Adding device"], ["Удаление устройства из VPN", "Removing device from VPN"],
   ["Сохранение списка маршрутов", "Saving route list"], ["Сохранение режима маршрутизации", "Saving routing mode"],
@@ -269,6 +281,8 @@ const english = [
   ["Проверка серверов завершена.", "Server checks completed."], ["Роутер подтвердил выбранный сервер.", "The router confirmed the selected server."],
   ["Сервер выбран. Настройки роутера не менялись.", "Server selected. Router settings were not changed."],
   ["Политики устройств подтверждены NDMS.", "Device policies were confirmed by NDMS."],
+  ["Роутер подтвердил VPN для всех устройств.", "The router confirmed VPN for all devices."],
+  ["Прежние правила устройств и сайтов восстановлены.", "Previous device and site rules were restored."],
   ["NDMS подтвердил политику устройства.", "NDMS confirmed the device policy."], ["Список устройств обновлён из NDMS.", "Device list was refreshed from NDMS."],
   ["Устройство добавлено в список. Это само по себе не включает VPN.", "Device added to the list. This does not enable VPN by itself."],
   ["Устройство удалено из списка VPN.", "Device removed from the VPN list."],
