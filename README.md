@@ -30,10 +30,14 @@ The integration does not automatically choose a server or refresh sources on a s
 
 ## Install through HACS
 
-1. In HACS, open the menu and add `https://github.com/dzr47/HA-HAPP` as a custom **Integration** repository. Download the latest release when one is available; until then HACS can use the default branch.
+HA-HAPP is available in the default HACS catalog. HACS must already be installed and configured in Home Assistant.
+
+1. Open **HACS**, search for **HA HAPP**, and select **HA HAPP (NetCraze/XKeen)** from `dzr47/HA-HAPP`. Select **Download** and install the latest release.
 2. Restart Home Assistant. In **Settings → Devices & services → Add integration**, choose **HA HAPP (NetCraze/XKeen)**.
 3. Enter the router IPv4 address, local administrator credentials, a registered main device MAC and the ID of the already configured VPN access policy. The main device is used by the single-device switch; the panel can manage additional registered devices.
 4. Open **HA HAPP** in the sidebar. Add a subscription and, if needed, an HTTPS source for the VPN site list under **Site routing**.
+
+**Fallback if HA HAPP is not found:** In HACS, open the top-right menu and select **Custom repositories**. Add `https://github.com/dzr47/HA-HAPP` with type **Integration**. Then search for **HA HAPP**, download the latest release, and continue with step 2 above.
 
 The panel has a **Panel language** selector in its header with English, Russian, German, Spanish and Simplified Chinese options. It initially follows the Home Assistant interface language and remembers an explicit choice per Home Assistant user in that browser. The panel language changes built-in labels and messages; router-provided device names, custom subscription names and notifications from other integrations retain their original text. The legacy default source name is displayed in the selected language without changing its saved value. Home Assistant entity names use the backend language when an entity is created and may retain existing names. Only the language preference is stored in browser storage. Router credentials and saved subscription URLs remain in Home Assistant private storage; registered device data is read through authenticated Home Assistant and is not stored in the browser.
 
